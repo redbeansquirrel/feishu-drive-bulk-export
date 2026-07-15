@@ -27,6 +27,9 @@ Base 暂不导出，只会在报告中标记为跳过。
 ### 1. 准备源目录
 
 先从飞书云盘取得保持目录结构的本地目录。云文档应表现为 `.url` 快捷方式，已经落地的 PDF、表格、图片等实体文件可保留在同一目录中。
+<img width="580" height="874" alt="image" src="https://github.com/user-attachments/assets/9623c14e-a913-48c2-81be-a966e9998f0c" />
+<img width="431" height="186" alt="image" src="https://github.com/user-attachments/assets/581d857e-d0d2-41b5-bff4-b0e5b4672a10" />
+
 
 任务清单包含文档 URL 和 token，属于敏感数据，不要提交到 Git 仓库或公开分享。
 
