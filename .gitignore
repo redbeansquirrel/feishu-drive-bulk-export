@@ -1,0 +1,17 @@
+# User data and generated artifacts. These may contain private Feishu URLs or tokens.
+/input/
+/output/
+/downloads/
+/archive/
+/reports/
+/data/
+*.url
+*.crdownload
+
+# Local configuration and agent state.
+/.agents/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>飞书一次性批量导出</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <h1>飞书一次性批量导出</h1>
+      <p class="hint">先在任意飞书云文档中正常导出一次，让扩展取得本次会话的临时导出授权。本期不处理 Base，但会将其写入未下载记录。</p>
+
+      <section class="card">
+        <div><strong>会话状态：</strong><span id="seedStatus">检查中…</span></div>
+        <div><strong>执行页面：</strong><span id="tabStatus">检查中…</span></div>
+      </section>
+
+      <section class="card form-grid">
+        <label>
+          下载任务清单（TSV）
+          <input id="manifestFile" type="file" accept=".tsv,.txt,text/tab-separated-values">
+        </label>
+        <label>
+          并发数（建议 2）
+          <input id="concurrency" type="number" min="1" max="8" value="2">
+        </label>
+        <label>
+          导出格式
+          <select id="exportFormat">
+            <option value="word">Word（DOCX + Docs）</option>
+            <option value="markdown">Markdown（DOCX + Docs）</option>
+            <option value="excel">Excel（仅 Sheet）</option>
+            <option value="freemind">FreeMind（仅 MindNotes）</option>
+            <option value="powerpoint">PowerPoint（仅 Slides）</option>
+          </select>
+        </label>
+        <label>
+          本轮最多处理（0 表示全部）
+          <input id="taskLimit" type="number" min="0" value="3">
+        </label>
+        <label class="wide">
+          Chrome 下载目录下的子文件夹
+          <input id="outputFolder" type="text" value="飞书批量下载/云盘归档">
+        </label>
+      </section>
+
+      <section class="card">
+        <div id="manifestSummary">尚未选择清单。</div>
+        <div class="buttons">
+          <button id="startButton" disabled>开始下载 Word（仅 DOCX）</button>
+          <button id="stopButton" disabled>停止派发新任务</button>
+          <button id="clearButton" class="secondary">清除全部断点</button>
+          <button id="failureButton" class="secondary" disabled>导出未下载明细 TSV</button>
+          <button id="reportButton" class="secondary" disabled>生成全目录下载简报（HTML）</button>
+          <button id="refreshButton" class="secondary" disabled>刷新概览</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <h2>全目录下载概览</h2>
+          <span id="reportHint" class="hint">选择任务清单后显示。</span>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-card summary-card--total"><span>总任务</span><strong id="summaryTotal">0</strong></div>
+          <div class="summary-card summary-card--success"><span>已完成</span><strong id="summarySuccess">0</strong></div>
+          <div class="summary-card summary-card--permission"><span>无权限</span><strong id="summaryNoPermission">0</strong></div>
+          <div class="summary-card summary-card--failed"><span>失败</span><strong id="summaryFailed">0</strong></div>
+          <div class="summary-card summary-card--skipped"><span>本期跳过</span><strong id="summarySkipped">0</strong></div>
+          <div class="summary-card summary-card--pending"><span>待处理</span><strong id="summaryPending">0</strong></div>
+        </div>
+        <div class="report-filters">
+          <label>
+            搜索
+            <input id="recordSearch" type="search" placeholder="名称、目录或失败原因">
+          </label>
+          <label>
+            状态
+            <select id="statusFilter">
+              <option value="undownloaded">全部未下载</option>
+              <option value="all">全部状态</option>
+              <option value="success">已完成</option>
+              <option value="no_permission">无权限</option>
+              <option value="failed">失败</option>
+              <option value="skipped">本期跳过</option>
+              <option value="pending">待处理</option>
+            </select>
+          </label>
+          <label>
+            类型
+            <select id="typeFilter">
+              <option value="">全部类型</option>
+              <option value="docx">DOCX</option>
+              <option value="docs">Docs</option>
+              <option value="sheets">Sheets</option>
+              <option value="mindnotes">MindNotes</option>
+              <option value="slides">Slides</option>
+              <option value="base">Base</option>
+            </select>
+          </label>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>状态</th>
+                <th>原因分类</th>
+                <th>类型</th>
+                <th>格式</th>
+                <th>名称</th>
+                <th>相对目录</th>
+                <th>具体原因</th>
+              </tr>
+            </thead>
+            <tbody id="recordTableBody"></tbody>
+          </table>
+        </div>
+        <div id="recordCountHint" class="hint record-count"></div>
+      </section>
+
+      <section class="card">
+        <div id="progress">等待开始。</div>
+        <progress id="progressBar" max="1" value="0"></progress>
+        <pre id="log"></pre>
+      </section>
+    </main>
+    <script type="module" src="runner.js"></script>
+  </body>
+</html>
